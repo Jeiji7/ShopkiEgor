@@ -1,0 +1,91 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="FankoEgorShopModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Client">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Surename" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="City" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="ID_prod" Type="Int32" />
+    <NavigationProperty Name="Product" Relationship="Self.FK_Client_Product" FromRole="Client" ToRole="Product" />
+  </EntityType>
+  <EntityType Name="Employee">
+    <Key>
+      <PropertyRef Name="ID_emp" />
+    </Key>
+    <Property Name="ID_emp" Type="Int32" Nullable="false" />
+    <Property Name="Login" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="Product">
+    <Key>
+      <PropertyRef Name="ID_prod" />
+    </Key>
+    <Property Name="ID_prod" Type="Int32" Nullable="false" />
+    <Property Name="Name_prod" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Price" Type="Decimal" Precision="8" Scale="3" />
+    <Property Name="ID_type" Type="Int32" />
+    <Property Name="Image_prod" Type="Binary" MaxLength="Max" FixedLength="false" />
+    <NavigationProperty Name="Client" Relationship="Self.FK_Client_Product" FromRole="Product" ToRole="Client" />
+    <NavigationProperty Name="Type_Prod" Relationship="Self.FK_Product_Type_Prod" FromRole="Product" ToRole="Type_Prod" />
+  </EntityType>
+  <EntityType Name="sysdiagrams">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="principal_id" Type="Int32" Nullable="false" />
+    <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="version" Type="Int32" />
+    <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="Type_Prod">
+    <Key>
+      <PropertyRef Name="ID_type" />
+    </Key>
+    <Property Name="ID_type" Type="Int32" Nullable="false" />
+    <Property Name="Name_type" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Product" Relationship="Self.FK_Product_Type_Prod" FromRole="Type_Prod" ToRole="Product" />
+  </EntityType>
+  <Association Name="FK_Client_Product">
+    <End Role="Product" Type="Self.Product" Multiplicity="0..1" />
+    <End Role="Client" Type="Self.Client" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Product">
+        <PropertyRef Name="ID_prod" />
+      </Principal>
+      <Dependent Role="Client">
+        <PropertyRef Name="ID_prod" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Product_Type_Prod">
+    <End Role="Type_Prod" Type="Self.Type_Prod" Multiplicity="0..1" />
+    <End Role="Product" Type="Self.Product" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Type_Prod">
+        <PropertyRef Name="ID_type" />
+      </Principal>
+      <Dependent Role="Product">
+        <PropertyRef Name="ID_type" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="FankoEgorShopEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Client" EntityType="Self.Client" />
+    <EntitySet Name="Employee" EntityType="Self.Employee" />
+    <EntitySet Name="Product" EntityType="Self.Product" />
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
+    <EntitySet Name="Type_Prod" EntityType="Self.Type_Prod" />
+    <AssociationSet Name="FK_Client_Product" Association="Self.FK_Client_Product">
+      <End Role="Product" EntitySet="Product" />
+      <End Role="Client" EntitySet="Client" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Product_Type_Prod" Association="Self.FK_Product_Type_Prod">
+      <End Role="Type_Prod" EntitySet="Type_Prod" />
+      <End Role="Product" EntitySet="Product" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
